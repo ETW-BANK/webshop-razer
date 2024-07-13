@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WEbshopnew.Data;
+
+using WEbshopnew.DataAccess.Data;
 
 namespace webshoping
 {

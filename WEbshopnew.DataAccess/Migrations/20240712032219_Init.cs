@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WEbshopnew.Migrations
+namespace WEbshopnew.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace webshoping.Models
+namespace WEbshopnew.Models
 {
     public class Catagory
     {
@@ -8,11 +8,11 @@ namespace webshoping.Models
         public int CatagoryId { get; set; }
 
         [Required]
-       public string CatagoryName { get; set; }
+        public string CatagoryName { get; set; }
 
         public string CatagoryDescription { get; set; }
 
-        public int DisplayOrder { get; set; }   
+        public int DisplayOrder { get; set; }
 
 
 

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
-using webshoping.Models;
+
 
 namespace webshoping.Controllers
 {

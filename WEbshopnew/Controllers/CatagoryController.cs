@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
-using webshoping.Models;
-using WEbshopnew.Data;
+using WEbshopnew.DataAccess.Data;
+using WEbshopnew.Models;
 
 namespace webshoping.Controllers
 {

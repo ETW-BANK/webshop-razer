@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using webshoping.Models;
+using WEbshopnew.Models;
 
-namespace WEbshopnew.Data
+
+namespace WEbshopnew.DataAccess.Data
 {
 
     public class ApplicationDbContext : IdentityDbContext

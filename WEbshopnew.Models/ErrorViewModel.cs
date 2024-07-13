@@ -1,4 +1,4 @@
-namespace webshoping.Models
+namespace WEbshopnew.Models
 {
     public class ErrorViewModel
     {
