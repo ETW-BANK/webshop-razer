@@ -4,22 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using WEbshopnew.DataAccess.Data;
+using WEbshopnew.DataAccess.Repository.IRepository;
 using WEbshopnew.Models;
 
 namespace webshoping.Controllers
 {
     public class CatagoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICatagoryRepository _catagoryRepository;
 
-        public CatagoryController(ApplicationDbContext context)
+        public CatagoryController(ICatagoryRepository catagoryRepository)
         {
-            _context = context;
+            _catagoryRepository = catagoryRepository;
         }
         [Authorize]
         public IActionResult Index()
         {
-           List<Catagory> ctagorylist = _context.Catagories.ToList();
+           List<Catagory> ctagorylist = _catagoryRepository.GetAll().ToList();
             return View(ctagorylist);
         }
 
@@ -28,79 +29,38 @@ namespace webshoping.Controllers
             return View();
         }
 
-        [HttpGet]
-  
-
-        public async Task<IActionResult> GetCatagories()
-        {
-            var result = await _context.Catagories.Select(catagory => new Catagory
-            {
-                CatagoryId = catagory.CatagoryId,
-                CatagoryName = catagory.CatagoryName,
-                CatagoryDescription = catagory.CatagoryDescription
-            }).ToListAsync();
-
-            return View(result);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create(Catagory category)
+
+        public IActionResult Create(Catagory obj)
         {
-            var result=  _context.Catagories.FirstOrDefault(x=>x.CatagoryName == category.CatagoryName);
-
-            if (result !=null) 
-            
+            if (obj.CatagoryName == obj.DisplayOrder.ToString())
             {
-                ModelState.AddModelError("", "Catagory name already exists.");
-                return View(result);
-
+                ModelState.AddModelError("name", "The Displayordere cannot exactly match he name");
             }
-            else if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-               
-                _context.Catagories.Add(category);
-                await _context.SaveChangesAsync();
+                _catagoryRepository.Add(obj);
+                _catagoryRepository.Save();
                 TempData["Success"] = "Catagory Created Sucessfully";
-              
-                //return RedirectToAction("Index");
+                return RedirectToAction("Index");   
             }
-            return View(category);
+            return View();
         }
-        [HttpPost]
-
-        public async Task<IActionResult> Delete( int id)
-        {
-            Catagory? catagory= await _context.Catagories.FindAsync(id);
-
-        
-            
-            if (catagory == null)
-            {
-                return NotFound();
-            }
-
-             _context.Catagories.Remove(catagory);
-            var result= await _context.SaveChangesAsync();  
-
-            if (result>0)
-            {
-                TempData["Success"] = "Catagory Deleted Sucessfully";
-                return RedirectToAction("Index");
-            }
 
 
-            return View(catagory);
-        }
+
+
 
         public IActionResult Edit(int id)
         {
-            if(id==null || id == 0)
+            Catagory? catagoryfromdb = _catagoryRepository.Get(u => u.CatagoryId == id);
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            Catagory? catagoryfromdb = _context.Catagories.Find(id);
-            if(catagoryfromdb == null)
+           
+            if (catagoryfromdb == null)
             {
                 return NotFound();
             }
@@ -109,19 +69,39 @@ namespace webshoping.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> Edit( Catagory? catagory)
+        public IActionResult Edit(Catagory? catagory)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                 _context.Update(catagory);
-                await _context.SaveChangesAsync();
+                _catagoryRepository.Update(catagory);
+                _catagoryRepository.Save();
                 TempData["Success"] = "Catagory Updated Sucessfully";
-                return RedirectToAction("Index");   
+                return RedirectToAction("Index");
 
             }
 
             return View();
         }
+    
+
+
+
+        [HttpPost]
+
+        public IActionResult Delete(int? id)
+        {
+            Catagory? catagoryfromdb = _catagoryRepository.Get(u => u.CatagoryId == id);
+
+            if(catagoryfromdb == null)
+            {
+                return NotFound();
+            }
+            _catagoryRepository.Remove(catagoryfromdb);
+            _catagoryRepository.Save();
+            TempData["Success"] = "Catagory deleted Sucessfully";
+            return RedirectToAction("Index");
+        }
+       
     }
 
     
