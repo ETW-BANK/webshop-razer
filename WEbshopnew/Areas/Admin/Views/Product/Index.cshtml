@@ -36,6 +36,7 @@
                 <th>Instructions</th>
                 <th>Ingredients</th>
                 <th>Catagory</th>
+                <th>Image</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -54,6 +55,7 @@
                     <td>@item.StockQuantity</td>
                     <td>@item.Instructions</td>
                     <td>@item.Ingredients</td>
+                    <td>@item.ImageUrl</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-warning">Edit</a>
                         <form asp-action="Delete" asp-route-id="@item.ProductId" method="post" class="d-inline">
