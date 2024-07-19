@@ -24,7 +24,8 @@ namespace webshoping
                 options.UseSqlServer(connectionString)); // Ensure "DataAccess.Data.ApplicationDbContext" is correct
 
            // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-           builder.Services.AddScoped<ICatagoryRepository, CatagoryRepository>();   
+           builder.Services.AddScoped<ICatagoryRepository, CatagoryRepository>();
+            builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -57,7 +58,7 @@ namespace webshoping
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages(); // Map Razor Pages
 

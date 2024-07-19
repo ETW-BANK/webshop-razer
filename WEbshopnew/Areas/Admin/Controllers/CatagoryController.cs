@@ -2,25 +2,26 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using WEbshopnew.DataAccess.Data;
 using WEbshopnew.DataAccess.Repository.IRepository;
 using WEbshopnew.Models;
 
-namespace webshoping.Controllers
+namespace WEbshopnew.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CatagoryController : Controller
     {
+       
         private readonly ICatagoryRepository _catagoryRepository;
 
         public CatagoryController(ICatagoryRepository catagoryRepository)
         {
             _catagoryRepository = catagoryRepository;
         }
-        [Authorize]
+
         public IActionResult Index()
         {
-           List<Catagory> ctagorylist = _catagoryRepository.GetAll().ToList();
+            List<Catagory> ctagorylist = _catagoryRepository.GetAll().ToList();
             return View(ctagorylist);
         }
 
@@ -42,7 +43,7 @@ namespace webshoping.Controllers
                 _catagoryRepository.Add(obj);
                 _catagoryRepository.Save();
                 TempData["Success"] = "Catagory Created Sucessfully";
-                return RedirectToAction("Index");   
+                return RedirectToAction("Index");
             }
             return View();
         }
@@ -59,7 +60,7 @@ namespace webshoping.Controllers
                 return NotFound();
             }
 
-           
+
             if (catagoryfromdb == null)
             {
                 return NotFound();
@@ -82,7 +83,7 @@ namespace webshoping.Controllers
 
             return View();
         }
-    
+
 
 
 
@@ -92,7 +93,7 @@ namespace webshoping.Controllers
         {
             Catagory? catagoryfromdb = _catagoryRepository.Get(u => u.CatagoryId == id);
 
-            if(catagoryfromdb == null)
+            if (catagoryfromdb == null)
             {
                 return NotFound();
             }
@@ -101,8 +102,8 @@ namespace webshoping.Controllers
             TempData["Success"] = "Catagory deleted Sucessfully";
             return RedirectToAction("Index");
         }
-       
+
     }
 
-    
+
 }
