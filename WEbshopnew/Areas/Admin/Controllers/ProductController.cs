@@ -12,10 +12,12 @@ namespace WEbshopnew.Areas.Admin.Controllers
 
         private readonly IProductsRepository _productsRepository;
         private readonly ICatagoryRepository _catagoryRepository;
-        public ProductController(IProductsRepository productsRepository,ICatagoryRepository catagoryRepository)
+        private readonly IWebHostEnvironment _webHostEnvironment;   
+        public ProductController(IProductsRepository productsRepository,ICatagoryRepository catagoryRepository,IWebHostEnvironment webHostEnvironment)
         {
             _productsRepository = productsRepository;
             _catagoryRepository = catagoryRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -36,22 +38,34 @@ namespace WEbshopnew.Areas.Admin.Controllers
         }
 
         [HttpPost]
-
-        public IActionResult Create(Products product)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Products product, IFormFile file)
         {
-            
-           
             if (ModelState.IsValid)
             {
+                if (file != null)
+                {
+                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "images/products");
+                    var filePath = Path.Combine(uploads, file.FileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    product.ImageUrl = "/images/products/" + file.FileName;
+                }
+
                 _productsRepository.Add(product);
                 _productsRepository.Save();
-                TempData["Success"] = "Product Added Sucessfully";
+                TempData["Success"] = "Product Added Successfully";
                 return RedirectToAction("Index");
             }
-            return View();
-        }
 
-        public IActionResult Edit(int id)
+            ViewBag.catagorylist = new SelectList(_catagoryRepository.GetAll(), "CatagoryId", "CatagoryName", product.CatagoryId);
+            return View(product);
+        }
+    
+
+    public IActionResult Edit(int id)
         {
             Products? productfromdb = _productsRepository.Get(u => u.ProductId == id);
             if (id == null || id == 0)

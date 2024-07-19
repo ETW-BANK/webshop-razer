@@ -29,4 +29,8 @@
     <ProjectReference Include="..\WEbshopnew.Utilities\WEbshopnew.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Product\" />
+  </ItemGroup>
+
 </Project>
