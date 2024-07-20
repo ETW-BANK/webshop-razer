@@ -10,7 +10,7 @@ namespace WEbshopnew.DataAccess.Repository.IRepository
   public interface ICatagoryRepository:IRepository<Catagory>
     {
         void Update(Catagory catagory);
-        void Save();
+ 
 
     }
 }

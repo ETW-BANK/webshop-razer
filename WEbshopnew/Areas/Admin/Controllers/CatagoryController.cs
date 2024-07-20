@@ -12,16 +12,16 @@ namespace WEbshopnew.Areas.Admin.Controllers
     public class CatagoryController : Controller
     {
        
-        private readonly ICatagoryRepository _catagoryRepository;
+        private readonly IUnitOfWork _unitofwork;
 
-        public CatagoryController(ICatagoryRepository catagoryRepository)
+        public CatagoryController(IUnitOfWork unitofwork)
         {
-            _catagoryRepository = catagoryRepository;
+            _unitofwork = unitofwork;
         }
 
         public IActionResult Index()
         {
-            List<Catagory> ctagorylist = _catagoryRepository.GetAll().ToList();
+            List<Catagory> ctagorylist = _unitofwork.Catagory.GetAll().ToList();
             return View(ctagorylist);
         }
 
@@ -40,8 +40,8 @@ namespace WEbshopnew.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                _catagoryRepository.Add(obj);
-                _catagoryRepository.Save();
+                _unitofwork.Catagory.Add(obj);
+                 _unitofwork.Save();
                 TempData["Success"] = "Catagory Created Sucessfully";
                 return RedirectToAction("Index");
             }
@@ -54,7 +54,7 @@ namespace WEbshopnew.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
-            Catagory? catagoryfromdb = _catagoryRepository.Get(u => u.CatagoryId == id);
+            Catagory? catagoryfromdb = _unitofwork.Catagory.Get(u => u.CatagoryId == id);
             if (id == null || id == 0)
             {
                 return NotFound();
@@ -74,8 +74,8 @@ namespace WEbshopnew.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _catagoryRepository.Update(catagory);
-                _catagoryRepository.Save();
+               _unitofwork.Catagory.Update(catagory);
+                _unitofwork.Save();
                 TempData["Success"] = "Catagory Updated Sucessfully";
                 return RedirectToAction("Index");
 
@@ -91,14 +91,14 @@ namespace WEbshopnew.Areas.Admin.Controllers
 
         public IActionResult Delete(int? id)
         {
-            Catagory? catagoryfromdb = _catagoryRepository.Get(u => u.CatagoryId == id);
+            Catagory? catagoryfromdb = _unitofwork.Catagory.Get(u => u.CatagoryId == id);
 
             if (catagoryfromdb == null)
             {
                 return NotFound();
             }
-            _catagoryRepository.Remove(catagoryfromdb);
-            _catagoryRepository.Save();
+            _unitofwork.Catagory.Remove(catagoryfromdb);
+            _unitofwork.Save();
             TempData["Success"] = "Catagory deleted Sucessfully";
             return RedirectToAction("Index");
         }

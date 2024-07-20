@@ -10,64 +10,46 @@ namespace WEbshopnew.Areas.Admin.Controllers
     public class ProductController : Controller
     {
 
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICatagoryRepository _catagoryRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment;   
-        public ProductController(IProductsRepository productsRepository,ICatagoryRepository catagoryRepository,IWebHostEnvironment webHostEnvironment)
+    private readonly IUnitOfWork _unitOfWork;   
+    
+        public ProductController(IUnitOfWork unitOfWork)
         {
-            _productsRepository = productsRepository;
-            _catagoryRepository = catagoryRepository;
-            _webHostEnvironment = webHostEnvironment;
+            _unitOfWork = unitOfWork;
+      
         }
         public IActionResult Index()
         {
-            List<Products> productslist = _productsRepository.GetAll().ToList();
+            List<Products> productslist = _unitOfWork.Product.GetAll().ToList();
          
             return View(productslist);
         }
-        public IActionResult Create()
-        {
-            IEnumerable<SelectListItem> catagorylist = _catagoryRepository.GetAll().Select(u => new SelectListItem
+    
+            public IActionResult Create()
             {
-                Text = u.CatagoryName,
-                Value = u.CatagoryId.ToString()
-            });
+                return View();
+            }
 
-            ViewBag.catagorylist=catagorylist;
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Products product, IFormFile file)
+            [HttpPost]
+       
+        public IActionResult Create(Products product)
         {
             if (ModelState.IsValid)
             {
-                if (file != null)
-                {
-                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "images/products");
-                    var filePath = Path.Combine(uploads, file.FileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                    product.ImageUrl = "/images/products/" + file.FileName;
-                }
+               
 
-                _productsRepository.Add(product);
-                _productsRepository.Save();
+               _unitOfWork.Product.Add(product);
+                _unitOfWork.Save();
                 TempData["Success"] = "Product Added Successfully";
                 return RedirectToAction("Index");
             }
 
-            ViewBag.catagorylist = new SelectList(_catagoryRepository.GetAll(), "CatagoryId", "CatagoryName", product.CatagoryId);
             return View(product);
         }
     
 
     public IActionResult Edit(int id)
         {
-            Products? productfromdb = _productsRepository.Get(u => u.ProductId == id);
+            Products? productfromdb = _unitOfWork.Product.Get(u => u.ProductId == id);
             if (id == null || id == 0)
             {
                 return NotFound();
@@ -88,8 +70,8 @@ namespace WEbshopnew.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productsRepository.Update(product);
-                _productsRepository.Save();
+                _unitOfWork.Product.Update(product);
+                _unitOfWork.Save();
                 TempData["Success"] = "Product Updated Sucessfully";
                 return RedirectToAction("Index");
 
@@ -102,15 +84,15 @@ namespace WEbshopnew.Areas.Admin.Controllers
 
         public IActionResult Delete(int? id) 
         {
-            Products product = _productsRepository.Get(u=>u.ProductId==id);
+            Products product =_unitOfWork.Product.Get(u=>u.ProductId==id);
 
             if(id == null || id == 0)
             {
                 return NotFound();
             }
 
-            _productsRepository.Remove(product);
-            _productsRepository.Save();
+            _unitOfWork.Product.Remove(product);
+            _unitOfWork.Save();
             TempData["Success"] = "Product deleted Sucessfully";
             return RedirectToAction("Index");   
         }

@@ -8,6 +8,7 @@ using WEbshopnew.DataAccess.Repository;
 using WEbshopnew.DataAccess.Repository.IRepository;
 
 
+
 namespace webshoping
 {
     public class Program
@@ -24,7 +25,7 @@ namespace webshoping
                 options.UseSqlServer(connectionString)); // Ensure "DataAccess.Data.ApplicationDbContext" is correct
 
            // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-           builder.Services.AddScoped<ICatagoryRepository, CatagoryRepository>();
+           builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {

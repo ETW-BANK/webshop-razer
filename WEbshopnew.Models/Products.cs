@@ -40,7 +40,8 @@ namespace WEbshopnew.Models
         public string Usage { get; set; }
         public bool IsPrescriptionRequired { get; set; }
 
-        public int CatagoryId  { get; set; }
+        public int? CatagoryId  { get; set; }
+
         [ForeignKey("CatagoryId")]
         public Catagory? catagory { get; set; }
 
