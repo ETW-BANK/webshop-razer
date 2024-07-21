@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WEbshopnew.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using WEbshopnew.DataAccess.Data;
 namespace WEbshopnew.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240720205028_image_property-Added-to_Product_Model")]
+    partial class image_propertyAddedto_Product_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -358,13 +361,13 @@ namespace WEbshopnew.DataAccess.Migrations
 
             modelBuilder.Entity("WEbshopnew.Models.Products", b =>
                 {
-                    b.HasOne("WEbshopnew.Models.Catagory", "Category")
+                    b.HasOne("WEbshopnew.Models.Catagory", "Catagory")
                         .WithMany()
                         .HasForeignKey("CatagoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Catagory");
                 });
 #pragma warning restore 612, 618
         }

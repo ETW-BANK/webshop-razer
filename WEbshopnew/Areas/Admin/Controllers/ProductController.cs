@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using WEbshopnew.DataAccess.Repository;
 using WEbshopnew.DataAccess.Repository.IRepository;
 using WEbshopnew.Models;
+using WEbshopnew.Models.ViewModels;
 
 namespace WEbshopnew.Areas.Admin.Controllers
 {
@@ -11,10 +12,13 @@ namespace WEbshopnew.Areas.Admin.Controllers
     {
 
     private readonly IUnitOfWork _unitOfWork;   
+        private readonly IWebHostEnvironment _webHostEnvironment;
     
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            
+            _webHostEnvironment=webHostEnvironment;
       
         }
         public IActionResult Index()
@@ -23,62 +27,87 @@ namespace WEbshopnew.Areas.Admin.Controllers
          
             return View(productslist);
         }
-    
-            public IActionResult Create()
-            {
-                return View();
-            }
 
-            [HttpPost]
-       
-        public IActionResult Create(Products product)
+        public IActionResult Upsert(int? id)
         {
-            if (ModelState.IsValid)
+            ProductVM productVM = new()
             {
-               
-
-               _unitOfWork.Product.Add(product);
-                _unitOfWork.Save();
-                TempData["Success"] = "Product Added Successfully";
-                return RedirectToAction("Index");
+                CatagoryList = _unitOfWork.Catagory.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.CatagoryName,
+                    Value = u.CatagoryId.ToString()
+                }),
+                Product = new Products()
+            };
+            if(id == null || id == 0)
+            {
+                return View(productVM);
             }
 
-            return View(product);
+            else
+            {
+                productVM.Product = _unitOfWork.Product.Get(u => u.ProductId == id);
+                return View(productVM);
+            }
+            
         }
-    
-
-    public IActionResult Edit(int id)
-        {
-            Products? productfromdb = _unitOfWork.Product.Get(u => u.ProductId == id);
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-
-            if (productfromdb == null)
-            {
-                return NotFound();
-            }
-            return View(productfromdb);
-        }
-
 
         [HttpPost]
-
-        public IActionResult Edit(Products? product)
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(ProductVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Update(product);
-                _unitOfWork.Save();
-                TempData["Success"] = "Product Updated Sucessfully";
-                return RedirectToAction("Index");
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
 
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                 
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    obj.Product.ImageUrl = @"\images\product\" + fileName;
+                }
+
+                if (obj.Product.ProductId == 0)
+                {
+                    _unitOfWork.Product.Add(obj.Product);
+                    TempData["Success"] = "Product Added Successfully";
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(obj.Product);
+                    TempData["Success"] = "Product Updated Successfully";
+                }
+
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                obj.CatagoryList = _unitOfWork.Catagory.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.CatagoryName,
+                    Value = u.CatagoryId.ToString()
+                });
             }
 
-            return View();
+            return View(obj);
         }
+
+
+
+
+
+
+
+
 
         [HttpPost]
 

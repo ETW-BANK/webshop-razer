@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,15 +34,25 @@ namespace WEbshopnew.Models
 
         [Required]
         public string Ingredients { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime ExpiryDate { get; set; } = DateTime.UtcNow;
         public int StockQuantity { get; set; }
 
         [Required]
         public string Usage { get; set; }
         public bool IsPrescriptionRequired { get; set; }
 
- 
+        [ForeignKey("CategoryId")]
+        public int CatagoryId { get; set; }
 
        
+        [ValidateNever]
+        public Catagory Category { get; set; }
+
+        public string? ImageUrl { get; set; }    
+
+        
+
+
+
     }
 }
