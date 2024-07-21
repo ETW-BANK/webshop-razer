@@ -1,92 +1,81 @@
 ﻿@model ProductVM
 
-<div class="card shadow border-0 mt-4">
-    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
-        <div class=" row">
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">@(Model.Product.ProductId!=0?"Update":"Create")  Product</h2>
+                <h2 class="text-white py-2">@(Model.Product.ProductId != 0 ? "Update" : "Create") Product</h2>
             </div>
         </div>
     </div>
 </div>
-<div class="card-body">
+<div class="card-body p-0">
     <form method="post" class="row" enctype="multipart/form-data">
-       <input asp-for="Product.ProductId" hidden />
-
-        <div class="border p-3 mt-4">
-           
+        <input asp-for="Product.ProductId" hidden />
+        <div class="border p-3">
             @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.ProductName" class="p-0"></label>
                 <input asp-for="Product.ProductName" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.ProductName" class="text-danger"></span>
             </div>
-           
-            <div class="mb-3 row p-1">
-                <label asp-for="Product.CatagoryId"  class="p-0"></label>
+
+            <div class="form-floating py-2 col-12">
+                <label asp-for="Product.CatagoryId" class="p-0"></label>
                 <select asp-for="Product.CatagoryId" asp-items="@Model.CatagoryList" class="form-select border-0 shadow">
                     <option disabled selected>--Select Category--</option>
                 </select>
-
                 <span asp-validation-for="Product.CatagoryId" class="text-danger"></span>
             </div>
 
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Description" class="p-0"></label>
                 <input asp-for="Product.Description" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Manufacturer" class="p-0"></label>
                 <input asp-for="Product.Manufacturer" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Manufacturer" class="text-danger"></span>
             </div>
 
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Price" class="p-0"></label>
                 <input asp-for="Product.Price" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Size" class="p-0"></label>
                 <input asp-for="Product.Size" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Size" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Instructions" class="p-0"></label>
                 <input asp-for="Product.Instructions" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Instructions" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Ingredients" class="p-0"></label>
                 <input asp-for="Product.Ingredients" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Ingredients" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.ExpiryDate" class="p-0"></label>
                 <input asp-for="Product.ExpiryDate" class="form-control" aria-required="true" type="date" />
                 <span asp-validation-for="Product.ExpiryDate" class="text-danger"></span>
             </div>
 
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.StockQuantity" class="p-0"></label>
                 <input asp-for="Product.StockQuantity" class="form-control" aria-required="true" />
                 <span asp-validation-for="Product.StockQuantity" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.Usage" class="p-0"></label>
                 <input asp-for="Product.Usage" class="form-control" aria-required="true" />
-
                 <span asp-validation-for="Product.Usage" class="text-danger"></span>
             </div>
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.IsPrescriptionRequired" class="p-0"></label>
                 <select asp-for="Product.IsPrescriptionRequired" class="form-control" aria-required="true">
                     <option value="true">Yes</option>
@@ -95,38 +84,28 @@
                 <span asp-validation-for="Product.IsPrescriptionRequired" class="text-danger"></span>
             </div>
 
-
-            <div class="mb-3 row p-1">
+            <div class="form-floating py-2 col-12">
                 <label asp-for="Product.ImageUrl" class="p-0"></label>
                 <input type="file" class="form-control" name="file" />
                 <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
             </div>
-            
 
-           
             <div class="row">
-                
                 <div class="col-6 col-md-3">
                     @if (Model.Product.ProductId != 0)
                     {
                         <button type="submit" class="btn btn-primary">Update</button>
-                    }else{
-
+                    }
+                    else
+                    {
                         <button type="submit" class="btn btn-primary">Create</button>
                     }
-                    </div>
+                </div>
                 <div class="col-6 col-md-3">
                     <a asp-controller="Product" asp-action="Index" class="btn btn-secondary border form-control">Back to List</a>
                 </div>
             </div>
+        </div>
+      
     </form>
-
-
-
 </div>
-    
-                     
-
-   
-
-                        
