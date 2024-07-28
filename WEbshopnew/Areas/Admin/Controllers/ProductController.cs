@@ -23,7 +23,7 @@ namespace WEbshopnew.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Products> productslist = _unitOfWork.Product.GetAll().ToList();
+            List<Products> productslist = _unitOfWork.Product.GetAll(includeproperties: "Category").ToList();
          
             return View(productslist);
         }
@@ -53,7 +53,6 @@ namespace WEbshopnew.Areas.Admin.Controllers
         }
 
         [HttpPost]
-
         public IActionResult Upsert(ProductVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
@@ -65,7 +64,14 @@ namespace WEbshopnew.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 
-                 
+                    if (!string.IsNullOrEmpty(obj.Product.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
 
                     using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
@@ -125,5 +131,18 @@ namespace WEbshopnew.Areas.Admin.Controllers
             TempData["Success"] = "Product deleted Sucessfully";
             return RedirectToAction("Index");   
         }
+
+        #region API CALLS
+
+        [HttpGet]
+
+        public IActionResult GetAll()
+        {
+            List<Products> productslist = _unitOfWork.Product.GetAll(includeproperties: "Category").ToList();
+
+            return Json(new {data=productslist});   
+        }
+
+        #endregion
     }
 }

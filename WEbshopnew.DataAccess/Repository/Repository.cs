@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using WEbshopnew.DataAccess.Data;
@@ -18,24 +19,50 @@ namespace WEbshopnew.DataAccess.Repository
         public Repository(ApplicationDbContext context)
         {
             _context = context;
-            this.set=_context.Set<T>(); 
+            this.set=_context.Set<T>();
+            _context.Products.Include(u => u.Category);
         }
         public void Add(T entity)
         {
           set.Add(entity);
         }
 
-        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includeproperties = null)
         {
             IQueryable<T> query = set;
-            query=query.Where(filter);
+            query = query.Where(filter);
+
+            if (!string.IsNullOrEmpty(includeproperties))
+            {
+                if (!string.IsNullOrEmpty(includeproperties))
+                {
+
+                    foreach (var item in includeproperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        query = query.Include(item);
+                    }
+
+                }
+            }
+       
 
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeproperties=null)
         {
+
+         
            IQueryable<T> query=set;
+            if (!string.IsNullOrEmpty(includeproperties))
+            {
+
+                foreach(var item in includeproperties.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)) 
+                {
+                 query=query.Include(item);
+                }
+               
+            }
             return query.ToList();
         }
 
