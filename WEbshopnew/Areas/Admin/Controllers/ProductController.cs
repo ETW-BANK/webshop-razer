@@ -115,22 +115,22 @@ namespace WEbshopnew.Areas.Admin.Controllers
 
 
 
-        [HttpPost]
+      //  [HttpPost]
 
-        public IActionResult Delete(int? id) 
-        {
-            Products product =_unitOfWork.Product.Get(u=>u.ProductId==id);
+       // public IActionResult Delete(int? id) 
+     //   //{
+           // Products product =_unitOfWork.Product.Get(u=>u.ProductId==id);
 
-            if(id == null || id == 0)
-            {
-                return NotFound();
-            }
+          //  if(id == null || id == 0)
+           // {
+              //  return NotFound();
+          //  }
 
-            _unitOfWork.Product.Remove(product);
-            _unitOfWork.Save();
-            TempData["Success"] = "Product deleted Sucessfully";
-            return RedirectToAction("Index");   
-        }
+           // _unitOfWork.Product.Remove(product);
+          //  _unitOfWork.Save();
+         //   TempData["Success"] = "Product deleted Sucessfully";
+         //   return RedirectToAction("Index");   
+      //  }
 
         #region API CALLS
 
@@ -141,6 +141,31 @@ namespace WEbshopnew.Areas.Admin.Controllers
             List<Products> productslist = _unitOfWork.Product.GetAll(includeproperties: "Category").ToList();
 
             return Json(new {data=productslist});   
+        }
+
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var producttobedeleted = _unitOfWork.Product.Get(u => u.ProductId == id);
+
+                if (producttobedeleted == null)
+            {
+                return Json(new {success=false,message="Error While Deleteing"});
+            }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, producttobedeleted.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+            _unitOfWork.Product.Remove(producttobedeleted);
+            _unitOfWork.Save();
+
+            List<Products> productslist = _unitOfWork.Product.GetAll(includeproperties: "Category").ToList();
+
+            return Json(new { success = true, message="Deleted Successully" });
         }
 
         #endregion
