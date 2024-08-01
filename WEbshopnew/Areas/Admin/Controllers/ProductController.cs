@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WEbshopnew.DataAccess.Repository;
 using WEbshopnew.DataAccess.Repository.IRepository;
 using WEbshopnew.Models;
 using WEbshopnew.Models.ViewModels;
+using WEbshopnew.Utilities;
 
 namespace WEbshopnew.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Administrator)]
     public class ProductController : Controller
     {
 

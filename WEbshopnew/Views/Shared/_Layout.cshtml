@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WEbshopnew.Utilities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -31,22 +32,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                           
-                        </li>
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Content Management
-                            </button>
-                            <ul class="dropdown-menu ">
-                                <li> <a class="dropdown-item text-bg-light" asp-area="Admin" asp-controller="Catagory" asp-action="Index">Catagory</a></li>
-                                <li> <a class="dropdown-item text-bg-light" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a></li>
+                        @if (User.IsInRole(SD.Role_Administrator))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
+                            </li>
+                            <li class="nav-item">
 
-                            </ul>
-                        </li>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Management
+                                </button>
+                                <ul class="dropdown-menu ">
+                                    <li> <a class="dropdown-item text-bg-light" asp-area="Admin" asp-controller="Catagory" asp-action="Index">Catagory</a></li>
+                                    <li> <a class="dropdown-item text-bg-light" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a></li>
+
+                                </ul>
+                            </li>
+                        }
+                        
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

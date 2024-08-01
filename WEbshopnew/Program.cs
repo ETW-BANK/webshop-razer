@@ -16,7 +16,7 @@ namespace webshoping
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+       
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -24,6 +24,7 @@ namespace webshoping
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString)); // Ensure "DataAccess.Data.ApplicationDbContext" is correct
 
+          
             // Use Identity with roles
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
@@ -32,6 +33,14 @@ namespace webshoping
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LoginPath = $"/Identity/Account/Logout";
+                options.LoginPath = $"/Identity/Account/AccessDenied";
+
+            });
 
             // Register repositories
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

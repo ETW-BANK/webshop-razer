@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using WEbshopnew.DataAccess.Data;
 using WEbshopnew.DataAccess.Repository.IRepository;
 using WEbshopnew.Models;
+using WEbshopnew.Utilities;
 
 namespace WEbshopnew.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles =SD.Role_Administrator)]
     public class CatagoryController : Controller
     {
        
