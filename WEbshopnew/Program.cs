@@ -24,9 +24,7 @@ namespace webshoping
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString)); // Ensure "DataAccess.Data.ApplicationDbContext" is correct
 
-           // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-           builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+            // Use Identity with roles
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -35,6 +33,12 @@ namespace webshoping
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            // Register repositories
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+            builder.Services.AddRazorPages();
+               
+            // Add controllers with views
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

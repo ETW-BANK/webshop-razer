@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace WEbshopnew.Utilities
 {
-    public class SD
+    public static class SD
     {
+        public const string Role_Customer = "Cusomer";
+        public const string Role_Company = "Company";
+        public const string Role_Administrator = "Administator";
+        public const string Role_Employee = "Employee";
     }
 }
